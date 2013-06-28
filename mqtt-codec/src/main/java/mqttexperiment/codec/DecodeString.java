@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import org.apache.mina.codec.ProtocolDecoder;
 import org.apache.mina.codec.ProtocolDecoderException;
 
-public enum DecodeString implements ProtocolDecoder<ByteBuffer, String, DecodeStringContext> {
+enum DecodeString implements ProtocolDecoder<ByteBuffer, String, DecodeStringContext> {
 
     LEN_MSB {
         public String decode(ByteBuffer b, DecodeStringContext ctx) {

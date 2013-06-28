@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import mqttexperiment.codec.msg.AbstractMqttMessage;
 import mqttexperiment.codec.msg.ConnectMessage;
 import mqttexperiment.codec.msg.PingReqMessage;
+import mqttexperiment.codec.msg.PublishMessage;
 
 enum MqttDecodingStep {
 
@@ -46,8 +47,14 @@ enum MqttDecodingStep {
                     case PINGREQ:
                         state.restart();
                         return PingReqMessage.PING_INSTANCE;
+                    case PUBLISH:
+                        state.st = PUBLISH;
+                        state.publishCtx = new PublishDecoderContext();
+                        state.publishCtx.remaining = state.remainingLength;
+                        state.publishCtx.publish = new PublishMessage(state.dup, state.qos, state.retain);
+                        return state.st.decode(incoming, state);
                     default:
-                        throw new java.lang.UnsupportedOperationException("not implemented");
+                        throw new java.lang.UnsupportedOperationException("not implemented : "+state.type.name());
                     }
                 }
             }
@@ -61,6 +68,21 @@ enum MqttDecodingStep {
             if (incoming.remaining() < 1)
                 return null;
             ConnectMessage msg = state.connectCtx.st.decode(incoming, state.connectCtx);
+            if (msg !=null) {
+                // reset
+                state.restart();
+                return msg;
+            } else {
+                return null;
+            }
+        }
+    },
+    PUBLISH {
+        @Override
+        public AbstractMqttMessage decode(ByteBuffer incoming, MqttDecoderContext state) {
+            if (incoming.remaining() < 1)
+                return null;
+            PublishMessage msg = state.publishCtx.st.decode(incoming, state.publishCtx);
             if (msg !=null) {
                 // reset
                 state.restart();

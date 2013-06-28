@@ -7,6 +7,8 @@ import mqttexperiment.codec.msg.ConnAckMessage;
 import mqttexperiment.codec.msg.ConnectMessage;
 import mqttexperiment.codec.msg.MqttMessageEncodingVisitor;
 import mqttexperiment.codec.msg.PingReqMessage;
+import mqttexperiment.codec.msg.PingRespMessage;
+import mqttexperiment.codec.msg.PublishMessage;
 
 import org.apache.mina.codec.StatelessProtocolEncoder;
 
@@ -34,16 +36,29 @@ public class MqttEncoder implements StatelessProtocolEncoder<AbstractMqttMessage
                 buf.put((byte) msg.getReturnCode().getCode());
                 buf.flip();
                 return buf;
-
             }
 
             @Override
             public ByteBuffer visit(ConnectMessage msg) {
                 throw new java.lang.UnsupportedOperationException("not implemented");
             }
-            
+
             @Override
             public ByteBuffer visit(PingReqMessage msg) {
+                throw new java.lang.UnsupportedOperationException("not implemented");
+            }
+
+            @Override
+            public ByteBuffer visit(PingRespMessage msg) {
+                ByteBuffer buf = ByteBuffer.allocate(2);
+                buf.put(computeHeader(msg));
+                buf.put((byte) 0);
+                buf.flip();
+                return buf;
+            }
+            
+            @Override
+            public ByteBuffer visit(PublishMessage msg) {
                 throw new java.lang.UnsupportedOperationException("not implemented");
             }
         });
@@ -51,7 +66,7 @@ public class MqttEncoder implements StatelessProtocolEncoder<AbstractMqttMessage
     }
 
     private byte computeHeader(AbstractMqttMessage msg) {
-        return (byte) ((msg.getType().getCode() << 4) | (msg.isDup() ? 0x8 : 0) | (msg.getQos() << 1) | (msg
-                .isRetain() ? 0x1 : 0));
+        return (byte) ((msg.getType().getCode() << 4) | (msg.isDup() ? 0x8 : 0) | (msg.getQos() << 1) | (msg.isRetain() ? 0x1
+                : 0));
     }
 }

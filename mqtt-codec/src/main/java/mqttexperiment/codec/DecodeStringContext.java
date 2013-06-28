@@ -1,6 +1,6 @@
 package mqttexperiment.codec;
 
-public class DecodeStringContext {
+class DecodeStringContext {
     // current decoding state
     DecodeString state = DecodeString.LEN_MSB;
 

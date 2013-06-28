@@ -13,6 +13,8 @@ public class MqttDecoderContext {
 
     ConnectDecoderContext connectCtx = null;
     
+    PublishDecoderContext publishCtx = null;
+    
     Type type;
 
     boolean dup;
@@ -23,7 +25,7 @@ public class MqttDecoderContext {
 
     // remaining length value
     int remainingLength = 0;
-    
+        
     void restart() {
         st = MqttDecodingStep.HEADER;
     }

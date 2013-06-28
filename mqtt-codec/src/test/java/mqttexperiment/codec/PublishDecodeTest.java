@@ -7,12 +7,12 @@ import mqttexperiment.codec.msg.AbstractMqttMessage;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class DecodeConnectTest {
-
-    private byte[] data = hexStringToByteArray("103B00064D514973647003CE000C000C6D794964656E746966696572000B646561642F636C69656E74000661726767732100036A6F6500057469676572");
+public class PublishDecodeTest {
+    
+    private byte[] data = hexStringToByteArray("300D0005746164616D617267677321");
 
     @Test
-    public void decode_connect_message() {
+    public void decode_publish_message() {
 
         MqttDecoder dec = new MqttDecoder();
         MqttDecoderContext state = dec.createDecoderState();
@@ -21,7 +21,7 @@ public class DecodeConnectTest {
     }
 
     @Test
-    public void decode_byte_by_byte_connect_message() {
+    public void decode_byte_by_byte_publish_message() {
         MqttDecoder dec = new MqttDecoder();
         MqttDecoderContext state = dec.createDecoderState();
         
@@ -40,7 +40,7 @@ public class DecodeConnectTest {
         System.err.println(state.st.name());
         Assert.assertNotNull(msg);
     }
-
+   
     public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];

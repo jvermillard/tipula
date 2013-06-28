@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import mqttexperiment.codec.msg.ConnectMessage;
 
-public enum ConnectDecodingStep {
+enum ConnectDecodingStep {
     PROTOCOL_NAME {
         @Override
         public ConnectMessage decode(ByteBuffer incoming, ConnectDecoderContext state) {

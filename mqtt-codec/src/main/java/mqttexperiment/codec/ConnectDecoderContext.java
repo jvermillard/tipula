@@ -2,7 +2,7 @@ package mqttexperiment.codec;
 
 import mqttexperiment.codec.msg.ConnectMessage;
 
-public class ConnectDecoderContext {
+class ConnectDecoderContext {
 
     ConnectDecodingStep st = ConnectDecodingStep.PROTOCOL_NAME;
     
