@@ -15,7 +15,7 @@ public class DecodeConnectTest {
     public void decode_connect_message() {
 
         MqttDecoder dec = new MqttDecoder();
-        MqttDecoderState state = dec.createDecoderState();
+        MqttDecoderContext state = dec.createDecoderState();
 
         System.err.println(dec.decode(ByteBuffer.wrap(data), state));
     }
@@ -23,7 +23,7 @@ public class DecodeConnectTest {
     @Test
     public void decode_byte_by_byte_connect_message() {
         MqttDecoder dec = new MqttDecoder();
-        MqttDecoderState state = dec.createDecoderState();
+        MqttDecoderContext state = dec.createDecoderState();
         
         AbstractMqttMessage msg;
         int index =0;

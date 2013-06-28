@@ -8,4 +8,5 @@ public interface MqttMessageEncodingVisitor {
     
     ByteBuffer visit(ConnAckMessage msg);
     
+    ByteBuffer visit(PingReqMessage msg);
 }

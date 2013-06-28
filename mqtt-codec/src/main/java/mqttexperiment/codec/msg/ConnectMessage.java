@@ -4,11 +4,11 @@ import java.nio.ByteBuffer;
 
 public class ConnectMessage extends AbstractMqttMessage {
 
-    private final int version;
+    private int version;
     
-    private final int connectFlags;
+    private int connectFlags;
     
-    private final int keepAlive;
+    private int keepAlive;
     
     private String clientId;
     
@@ -20,8 +20,14 @@ public class ConnectMessage extends AbstractMqttMessage {
     
     private String willMessage;
     
-    public ConnectMessage(Type type, boolean dup, int qos, boolean retain, int version, int connectFlags, int keelAlive) {
-        super(type, dup, qos, retain);
+    private String protocolName;
+    
+    public ConnectMessage( boolean dup, int qos, boolean retain) {
+        super(Type.CONNECT, dup, qos, retain);
+    }
+    
+    public ConnectMessage(boolean dup, int qos, boolean retain, int version, int connectFlags, int keelAlive) {
+        super(Type.CONNECT, dup, qos, retain);
         this.version = version;
         this.connectFlags = connectFlags;
         this.keepAlive = keelAlive;
@@ -36,15 +42,15 @@ public class ConnectMessage extends AbstractMqttMessage {
     }
     
     public boolean isFlagWill() {
-        return (connectFlags & 0b0000_0100) != 0;
+        return (connectFlags & 0x4) != 0;
     }
     
     public boolean isFlagUsername() {
-        return (connectFlags & 0b1000_0000) != 0;
+        return (connectFlags & 0x80) != 0;
     }
     
     public boolean isFlagPassword() {
-        return (connectFlags & 0b0100_0000) != 0;
+        return (connectFlags & 0x40) != 0;
     }
     
     public String getClientId() {
@@ -99,14 +105,33 @@ public class ConnectMessage extends AbstractMqttMessage {
         return keepAlive;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public void setConnectFlags(int connectFlags) {
+        this.connectFlags = connectFlags;
+    }
+
+    public void setKeepAlive(int keepAlive) {
+        this.keepAlive = keepAlive;
+    }
+    
+    public String getProtocolName() {
+        return protocolName;
+    }
+
+    public void setProtocolName(String protocolName) {
+        this.protocolName = protocolName;
+    }
+
     @Override
     public String toString() {
         return "ConnectMessage [version=" + version + ", connectFlags=" + connectFlags + ", keepAlive=" + keepAlive
                 + ", clientId=" + clientId + ", username=" + username + ", password=" + password + ", willTopic="
-                + willTopic + ", willMessage=" + willMessage + ", getType()=" + getType() + ", isDup()=" + isDup()
-                + ", getQos()=" + getQos() + "]";
+                + willTopic + ", willMessage=" + willMessage + ", protocolName=" + protocolName + ", getType()="
+                + getType() + ", isDup()=" + isDup() + ", getQos()=" + getQos() + ", isRetain()=" + isRetain() + "]";
     }
+    
 }
