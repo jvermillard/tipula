@@ -13,4 +13,6 @@ public interface MqttMessageEncodingVisitor {
     ByteBuffer visit(PingRespMessage msg);
     
     ByteBuffer visit(PublishMessage msg);
+    
+    ByteBuffer visit(DisconnectMessage msg);
 }

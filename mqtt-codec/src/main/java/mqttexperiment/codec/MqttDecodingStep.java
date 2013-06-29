@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import mqttexperiment.codec.msg.AbstractMqttMessage;
 import mqttexperiment.codec.msg.ConnectMessage;
+import mqttexperiment.codec.msg.DisconnectMessage;
 import mqttexperiment.codec.msg.PingReqMessage;
 import mqttexperiment.codec.msg.PublishMessage;
 
@@ -47,6 +48,9 @@ enum MqttDecodingStep {
                     case PINGREQ:
                         state.restart();
                         return PingReqMessage.PING_INSTANCE;
+                    case DISCONNECT:
+                        state.restart();
+                        return DisconnectMessage.DISCONNECT_INSTANCE;
                     case PUBLISH:
                         state.st = PUBLISH;
                         state.publishCtx = new PublishDecoderContext();

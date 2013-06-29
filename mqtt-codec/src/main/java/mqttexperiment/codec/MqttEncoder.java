@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import mqttexperiment.codec.msg.AbstractMqttMessage;
 import mqttexperiment.codec.msg.ConnAckMessage;
 import mqttexperiment.codec.msg.ConnectMessage;
+import mqttexperiment.codec.msg.DisconnectMessage;
 import mqttexperiment.codec.msg.MqttMessageEncodingVisitor;
 import mqttexperiment.codec.msg.PingReqMessage;
 import mqttexperiment.codec.msg.PingRespMessage;
@@ -59,6 +60,11 @@ public class MqttEncoder implements StatelessProtocolEncoder<AbstractMqttMessage
             
             @Override
             public ByteBuffer visit(PublishMessage msg) {
+                throw new java.lang.UnsupportedOperationException("not implemented");
+            }
+            
+            @Override
+            public ByteBuffer visit(DisconnectMessage msg) {
                 throw new java.lang.UnsupportedOperationException("not implemented");
             }
         });
