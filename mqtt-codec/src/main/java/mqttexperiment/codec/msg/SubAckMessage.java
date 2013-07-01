@@ -20,21 +20,22 @@
 package mqttexperiment.codec.msg;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
- * A Ping request message, sent by the client for keeping the connection open.
- * The server should reply with a {@link PingRespMessage}.
+ * Subscription acknowledge message. Used by the server to acknowledge a {@link SubscribeMessage} request from the client. 
  */
-public class PingReqMessage extends AbstractMqttMessage {
+public class SubAckMessage extends AbstractMqttMessage {
 
-    // used to reduce the GC pressure, since this message is immutable
-    public static final PingReqMessage PING_INSTANCE = new PingReqMessage();
+    private int messageId;
+
+    private int[] grantedQos;
 
     /**
-     * Create a ping request message.
+     * Create a subscription acknowledge message.
      */
-    public PingReqMessage() {
-        super(Type.PINGREQ, false, 0, false);
+    public SubAckMessage() {
+        super(Type.SUBACK, false, 0, false);
     }
 
     /**
@@ -44,4 +45,27 @@ public class PingReqMessage extends AbstractMqttMessage {
     public ByteBuffer visit(MqttMessageEncodingVisitor visitor) {
         return visitor.visit(this);
     }
+
+    public int[] getGrantedQos() {
+        return grantedQos;
+    }
+
+    public void setGrantedQos(int[] grantedQos) {
+        this.grantedQos = grantedQos;
+    }
+
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
+    }
+
+    @Override
+    public String toString() {
+        return "SubAckMessage [messageId=" + messageId + ", grantedQos=" + Arrays.toString(grantedQos) + ", getType()="
+                + getType() + ", isDup()=" + isDup() + ", getQos()=" + getQos() + ", isRetain()=" + isRetain() + "]";
+    }
+
 }

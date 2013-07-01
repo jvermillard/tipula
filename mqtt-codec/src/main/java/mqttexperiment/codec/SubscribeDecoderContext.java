@@ -17,31 +17,31 @@
  *  under the License.
  *
  */
-package mqttexperiment.codec.msg;
+package mqttexperiment.codec;
 
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import mqttexperiment.codec.msg.SubscribeMessage;
 
 /**
- * A Ping request message, sent by the client for keeping the connection open.
- * The server should reply with a {@link PingRespMessage}.
+ * State of the {@link SubscribeDecodingStep} state machine.
  */
-public class PingReqMessage extends AbstractMqttMessage {
-
-    // used to reduce the GC pressure, since this message is immutable
-    public static final PingReqMessage PING_INSTANCE = new PingReqMessage();
-
-    /**
-     * Create a ping request message.
-     */
-    public PingReqMessage() {
-        super(Type.PINGREQ, false, 0, false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ByteBuffer visit(MqttMessageEncodingVisitor visitor) {
-        return visitor.visit(this);
-    }
+public class SubscribeDecoderContext {
+    
+    SubscribeDecodingStep st = SubscribeDecodingStep.MSG_ID_MSB;
+    
+    SubscribeMessage subscribe;
+    
+    // remaining bytes (the decoded value)
+    int remaining;
+    
+    // the byte consumed from the variable header and the payload
+    int consumedByte;
+    
+    DecodeStringContext subStrCtxt = new DecodeStringContext();
+    
+    List<String> topics = new ArrayList<String>();
+    List<Integer> topicsQos = new ArrayList<Integer>();
+    
 }

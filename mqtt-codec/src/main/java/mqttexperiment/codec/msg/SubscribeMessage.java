@@ -23,21 +23,19 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * A publish message, used by a client or the server for publishing a message on a given topic.
+ * Subscription message, used by a client to subscribe to a list of topic with a given QoS level.
+ *
  */
-public class PublishMessage extends AbstractMqttMessage {
+public class SubscribeMessage extends AbstractMqttMessage {
 
-    private String topic;
+    private String[] topics;
+
+    private int[] topicQos;
 
     private int messageId;
 
-    private byte[] payload;
-
-    /**
-     * Create a publish message.
-     */
-    public PublishMessage(boolean dup, int qos, boolean retain) {
-        super(Type.PUBLISH, dup, qos, retain);
+    public SubscribeMessage() {
+        super(Type.SUBSCRIBE, false, 1, false);
     }
 
     /**
@@ -48,12 +46,20 @@ public class PublishMessage extends AbstractMqttMessage {
         return visitor.visit(this);
     }
 
-    public String getTopic() {
-        return topic;
+    public String[] getTopics() {
+        return topics;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setTopics(String[] topics) {
+        this.topics = topics;
+    }
+
+    public int[] getTopicQos() {
+        return topicQos;
+    }
+
+    public void setTopicQos(int[] topicQos) {
+        this.topicQos = topicQos;
     }
 
     public int getMessageId() {
@@ -64,18 +70,13 @@ public class PublishMessage extends AbstractMqttMessage {
         this.messageId = messageId;
     }
 
-    public byte[] getPayload() {
-        return payload;
-    }
-
-    public void setPayload(byte[] payload) {
-        this.payload = payload;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
-        return "PublishMessage [topic=" + topic + ", messageId=" + messageId + ", payload=" + Arrays.toString(payload)
+        return "SubscribeMessage [topics=" + Arrays.toString(topics) + ", topicQos=" + Arrays.toString(topicQos)
                 + ", getType()=" + getType() + ", isDup()=" + isDup() + ", getQos()=" + getQos() + ", isRetain()="
-                + isRetain() + "]";
+                + isRetain() + ", messageId=" + messageId + "]";
     }
 }
