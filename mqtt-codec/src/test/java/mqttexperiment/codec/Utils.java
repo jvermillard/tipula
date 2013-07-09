@@ -17,30 +17,19 @@
  *  under the License.
  *
  */
-package mqttexperiment.codec.msg;
-
-import java.nio.ByteBuffer;
+package mqttexperiment.codec;
 
 /**
- * Response from the server to a client {@link PingReqMessage}.
+ * some random test utilities
  */
-public class PingRespMessage extends AbstractMqttMessage {
+public class Utils {
 
-    // used to reduce the GC pressure, since this message is immutable
-    public static final PingRespMessage PING_INSTANCE = new PingRespMessage();
-
-    /**
-     * Create a ping response message.
-     */
-    public PingRespMessage() {
-        super(Type.PINGRESP, false, 0, false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ByteBuffer visit(MqttMessageEncodingVisitor visitor) {
-        return visitor.visit(this);
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
     }
 }
