@@ -87,7 +87,6 @@ public class MqttEncoder implements StatelessProtocolEncoder<AbstractMqttMessage
 
             @Override
             public ByteBuffer visit(PublishMessage msg) {
-                System.err.println(msg);
                 int remainingSize = encodedStringSize(msg.getTopic()); 
                 if (msg.getQos()>0) {
                     // the message ID
