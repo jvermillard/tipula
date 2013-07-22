@@ -19,6 +19,7 @@
  */
 package mqttexperiment.codec;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -86,7 +87,28 @@ public class MqttEncoder implements StatelessProtocolEncoder<AbstractMqttMessage
 
             @Override
             public ByteBuffer visit(PublishMessage msg) {
-                throw new java.lang.UnsupportedOperationException("not implemented");
+                System.err.println(msg);
+                int remainingSize = encodedStringSize(msg.getTopic()); 
+                if (msg.getQos()>0) {
+                    // the message ID
+                    remainingSize += 2;
+                }
+                remainingSize += msg.getPayload().length;
+                
+                
+                ByteBuffer buf = ByteBuffer.allocate(1+2+encodedRemainingByteSize(remainingSize)+remainingSize);
+                buf.order(ByteOrder.BIG_ENDIAN);
+                
+                buf.put(computeHeader(msg));
+                
+                encodeRemainingBytes(remainingSize, buf);
+                encodedString(msg.getTopic(), buf);
+                if (msg.getQos()>0) {
+                    buf.putShort((short)msg.getMessageId());
+                }
+                buf.put(msg.getPayload());
+                buf.flip();
+                return buf;
             }
 
             @Override
@@ -120,5 +142,49 @@ public class MqttEncoder implements StatelessProtocolEncoder<AbstractMqttMessage
     private byte computeHeader(AbstractMqttMessage msg) {
         return (byte) ((msg.getType().getCode() << 4) | (msg.isDup() ? 0x8 : 0) | (msg.getQos() << 1) | (msg.isRetain() ? 0x1
                 : 0));
+    }
+    
+    private int encodedRemainingByteSize(int remaining) {
+        int numBytes = 0;
+        long no = remaining;
+        do {
+                no = no / 128;
+                numBytes++;
+        } while ( (no > 0) && (numBytes<4) );
+        return numBytes;
+    }
+    
+    private void encodeRemainingBytes(int remaining, ByteBuffer buff) {
+        int numBytes = 0;
+        long no = remaining;
+        do {
+                byte digit = (byte)(no % 128);
+                no = no / 128;
+                if (no > 0) {
+                        digit |= 0x80;
+                }
+                buff.put(digit);
+                numBytes++;
+        } while ( (no > 0) && (numBytes<4) );
+    }
+    
+    private int encodedStringSize(String value) {
+        try {
+            return value.getBytes("UTF-8").length +2;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("no UTF-8 charset in the JVM",e);
+        }
+    }
+    
+    private void encodedString(String value, ByteBuffer buff) {
+        byte[] data;
+        try {
+            data = value.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("no UTF-8 charset in the JVM",e);
+        }
+        
+        buff.putShort((short)data.length);
+        buff.put(data);
     }
 }
