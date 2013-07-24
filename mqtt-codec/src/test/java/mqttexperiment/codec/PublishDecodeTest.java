@@ -31,7 +31,8 @@ import org.junit.Test;
 
 public class PublishDecodeTest {
     
-    private byte[] data = Utils.hexStringToByteArray("300D0005746164616D617267677321");
+    //private byte[] data = Utils.hexStringToByteArray("300D0005746164616D617267677321");
+    private byte[] data = Utils.hexStringToByteArray("30AC01001D3432353731303735323238393838322F6D657373616765732F6A736F6E5B7B22676174657761792E72737369223A205B7B2274696D657374616D7022203A20313337343637353831333537352C202276616C756522203A2022373839227D5D7D2C7B22656E67696E652E74656D7065726174757265223A205B7B2274696D657374616D7022203A20313337343637353831333537352C202276616C756522203A2022383532227D5D7D5D");
 
     @Test
     public void decode_publish_message() {
@@ -61,8 +62,8 @@ public class PublishDecodeTest {
         
         assertEquals(0,msg.getMessageId());
         System.err.println(new String(msg.getPayload()));
-        assertEquals("tadam",msg.getTopic());
-        assertEquals("arggs!",new String(msg.getPayload()));
+        assertEquals("425710752289882/messages/json",msg.getTopic());
+        assertEquals("[{\"gateway.rssi\": [{\"timestamp\" : 1374675813575, \"value\" : \"789\"}]},{\"engine.temperature\": [{\"timestamp\" : 1374675813575, \"value\" : \"852\"}]}]",new String(msg.getPayload()));
         assertNotNull(msg);
     }
    

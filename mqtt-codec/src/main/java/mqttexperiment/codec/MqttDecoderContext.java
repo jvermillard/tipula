@@ -48,7 +48,10 @@ public class MqttDecoderContext {
 
     // remaining length value
     int remainingLength = 0;
-  
+ 
+    // current multiplier for remaining length decoding
+    int multiplier = 1;
+    
     /**
      * Clean the state after a successful message decoding.
      */

@@ -49,6 +49,7 @@ enum MqttDecodingStep {
             state.qos = qos;
             state.retain = (header & 0x1) != 0;
             state.remainingLength = 0;
+            state.multiplier = 1;
             state.st = REMAINING_LENGTH;
             return state.st.decode(incoming, state);
         }
@@ -60,8 +61,9 @@ enum MqttDecodingStep {
 
             while (incoming.remaining() > 0) {
                 int b = incoming.get() & 0xFF;
-                state.remainingLength = (state.remainingLength << 7) + (b & 0x7F);
-
+                //state.remainingLength = (state.remainingLength << 7) + (b & 0x7F);
+                state.remainingLength += (b & 0x7F) * state.multiplier;
+                state.multiplier *= 128;
                 if ((b & 0x80) == 0) {
                     // we are done decoding the remaining length, compute next step
                     switch (state.type) {
