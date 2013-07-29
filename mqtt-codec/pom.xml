@@ -11,7 +11,8 @@
     <url>http://qithub.org/jvermillard</url>
 
     <scm>
-         <developerConnection>scm:git:git://github.com:jvermillard/mqtt-experiment.git</developerConnection>
+        <developerConnection>scm:git:git://github.com:jvermillard/mqtt-experiment.git</developerConnection>
+        <connection>scm:git:git://github.com:jvermillard/mqtt-experiment.git</connection>
     </scm>
 
     <properties>
